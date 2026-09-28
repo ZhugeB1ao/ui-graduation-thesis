@@ -5,6 +5,21 @@ interface AssistantMessageProps {
   message: Message
 }
 
+function formatAnswer(content: string): string {
+  if (!content) return ''
+
+  return content
+    // Giữ nguyên nội dung trong các cặp bold **...**
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    // Nếu có dấu gạch đầu dòng inline (ví dụ: "... - ý 1 - ý 2" hoặc "... – ý 1 – ý 2"), xuống dòng và GIỮ NGUYÊN dấu gạch
+    .replace(/(\S)\s+([–—-]\s+)/g, '$1\n$2')
+    // Thay vì dùng dấu *, chuyển đổi thành xuống dòng (không giữ dấu *)
+    .replace(/(?:^|\r\n|\r|\n|\s)\*+\s*/g, '\n')
+    // Chuẩn hóa dòng trống
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 export function AssistantMessage({ message }: AssistantMessageProps) {
   // Lấy tài liệu có score cao nhất từ sources
   const topSource =
@@ -17,14 +32,7 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
       ? message.sources.length - 1
       : 0
 
-  // Xử lý hoàn toàn tại Frontend: Thay vì dùng dấu *, chuyển đổi thành xuống dòng
-  const formattedContent = message.content
-    ? message.content
-        .replace(/\*\*(.*?)\*\*/g, '$1')
-        .replace(/(?:^|\r\n|\r|\n|\s)\*+\s*/g, '\n')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim()
-    : ''
+  const formattedContent = formatAnswer(message.content)
 
   return (
     <article aria-label="Phản hồi của ChatGPT" className="flex flex-col items-start w-full space-y-2 select-text">
