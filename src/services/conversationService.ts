@@ -42,14 +42,19 @@ interface RawAskResponse {
   sources: RawApiSource[]
 }
 
-export async function askQuestion(question: string, top_k: number = 3): Promise<AskApiResponse> {
+export async function askQuestion(question: string, top_k?: number): Promise<AskApiResponse> {
   try {
+    const payload: { question: string; top_k?: number } = { question }
+    if (top_k !== undefined) {
+      payload.top_k = top_k
+    }
+
     const res = await fetch(`${API_BASE_URL}/ask`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ question, top_k }),
+      body: JSON.stringify(payload),
     })
 
     if (!res.ok) {
