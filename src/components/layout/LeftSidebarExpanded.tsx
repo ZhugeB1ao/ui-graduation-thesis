@@ -33,7 +33,7 @@ export function LeftSidebarExpanded() {
         {/* Header */}
         <div className="flex items-center justify-between px-2 mb-4">
           <span className="text-[18px] font-semibold tracking-tight text-white">
-            ChatHSU
+            {import.meta.env.VITE_APP_TITLE || 'ChatHSU'}
           </span>
           <div className="flex items-center gap-1 text-[#b4b4b4]">
             <button

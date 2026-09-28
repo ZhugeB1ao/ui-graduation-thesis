@@ -11,7 +11,23 @@ const data = rawData as ConversationData
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 export function getUser(): User {
-  return data.user
+  const envName = import.meta.env.VITE_USER_NAME
+  const envStudentId = import.meta.env.VITE_USER_STUDENT_ID
+
+  return {
+    ...data.user,
+    name: envName || data.user.name,
+    studentId: envStudentId || data.user.studentId,
+    initials: envName
+      ? envName
+          .split(' ')
+          .filter(Boolean)
+          .map((p) => p[0])
+          .join('')
+          .slice(-2)
+          .toUpperCase()
+      : data.user.initials,
+  }
 }
 
 export function getConversations(): Conversation[] {
