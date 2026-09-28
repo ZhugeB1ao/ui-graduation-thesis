@@ -17,10 +17,19 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
       ? message.sources.length - 1
       : 0
 
+  // Xử lý hoàn toàn tại Frontend: Thay vì dùng dấu *, chuyển đổi thành xuống dòng
+  const formattedContent = message.content
+    ? message.content
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/(?:^|\r\n|\r|\n|\s)\*+\s*/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim()
+    : ''
+
   return (
     <article aria-label="Phản hồi của ChatGPT" className="flex flex-col items-start w-full space-y-2 select-text">
-      <div className="text-[#e2e2e2] text-[15px] leading-relaxed">
-        <span>{message.content}</span>
+      <div className="text-[#e2e2e2] text-[15px] leading-relaxed whitespace-pre-wrap">
+        <span>{formattedContent}</span>
         {topSource && (
           <span
             className="inline-flex items-center gap-1 ml-2 px-2 py-0.5 rounded-full bg-[#2a2a2a] hover:bg-[#333333] border border-white/10 text-xs text-[#e2e2e2] align-middle select-none transition-colors cursor-default"
