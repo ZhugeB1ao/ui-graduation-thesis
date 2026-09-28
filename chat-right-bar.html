@@ -1,0 +1,300 @@
+<!DOCTYPE html><html class="h-full bg-black" lang="vi" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ChatGPT</title>
+<!-- Load Tailwind CSS v3 with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#0d0d0d',
+            chatBubble: '#1b3b64',
+            inputBg: '#212121',
+            iconMuted: '#999999',
+            textSecondary: '#8e8e8e',
+            accentBlue: '#2563eb'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="custom-overrides">
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Hide native scrollbars while preserving scroll functionality */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="h-full flex overflow-hidden font-sans select-none text-[15px]">
+<!-- BEGIN: Left Navigation Rail -->
+<aside class="w-[260px] h-full flex flex-col justify-between bg-black text-[#ECECEC] z-20 flex-shrink-0 select-none border-r border-white/5" data-purpose="sidebar-rail"><div class="flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar px-3 pt-3.5"><div class="flex items-center justify-between px-2 mb-4"><span class="text-[18px] font-semibold tracking-tight text-white">ChatHSU</span><div class="flex items-center gap-1 text-[#b4b4b4]"><button aria-label="Tìm kiếm" class="p-1.5 hover:text-white rounded-lg hover:bg-white/5 transition-colors" type="button"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg></button><button aria-label="Đóng thanh bên" class="p-1.5 hover:text-white rounded-lg hover:bg-white/5 transition-colors" type="button"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="3" width="18" x="3" y="3"></rect><line x1="9" x2="9" y1="3" y2="21"></line></svg></button></div></div><div class="space-y-0.5 mb-5 text-[14px]"><button class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-white hover:bg-[#212121] transition-colors text-left font-normal" type="button"><svg class="w-5 h-5 text-white/90" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg><span class="">Đoạn chat mới</span></button><button class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-white hover:bg-[#212121] transition-colors text-left font-normal" type="button"><svg class="w-5 h-5 text-white/90" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span class="">Thêm</span></button></div><div class="mb-4"><div class="space-y-0.5 text-[14px]"></div></div><div class="mb-2"><div class="px-2.5 py-1 text-xs text-[#8e8e8e] font-medium">Đoạn chat</div><div class="space-y-0.5 text-[14px]"><div class="w-full flex items-center px-3 py-2 rounded-xl bg-[#212121] text-white font-normal truncate cursor-pointer">Chào hỏi</div><button class="w-full flex items-center px-3 py-2 rounded-xl text-white/90 hover:bg-[#212121] transition-colors text-left font-normal truncate" type="button">Đánh giá năng lực học sinh</button><button class="w-full flex items-center px-3 py-2 rounded-xl text-white/90 hover:bg-[#212121] transition-colors text-left font-normal truncate" type="button">Kiểm tra đang sạc</button><button class="w-full flex items-center px-3 py-2 rounded-xl text-white/90 hover:bg-[#212121] transition-colors text-left font-normal truncate" type="button">Định nghĩa đơn thức</button><button class="w-full flex items-center px-3 py-2 rounded-xl text-white/90 hover:bg-[#212121] transition-colors text-left font-normal truncate" type="button">Tài liệu Nextjs hy...</button><button class="w-full flex items-center px-3 py-2 rounded-xl text-white/90 hover:bg-[#212121] transition-colors text-left font-normal truncate" type="button">Tính điểm trung bình</button></div></div></div><div class="p-3 border-t border-white/5 flex items-center justify-between gap-2"><div class="flex items-center gap-2.5 min-w-0"><div class="w-8 h-8 rounded-full bg-[#df6612] text-white flex items-center justify-center font-bold text-xs tracking-tight flex-shrink-0">GB</div><div class="min-w-0 flex flex-col"><span class="text-[14px] text-white font-medium truncate leading-tight">Gia Bảo</span><span class="text-xs text-[#8e8e8e] truncate">MSSV: 20210001</span></div></div></div></aside>
+<!-- END: Left Navigation Rail -->
+<!-- BEGIN: Main Chat Area -->
+<main class="flex-1 flex flex-col h-full bg-black relative overflow-hidden">
+<!-- Top Action Bar -->
+<header class="h-14 flex items-center justify-end px-5 gap-3.5 flex-shrink-0 z-10" data-purpose="top-header-actions">
+<!-- Upgrade Button -->
+<button class="flex items-center gap-1.5 text-[#55b9ff] hover:text-[#7dcdff] text-[13.5px] font-normal transition-colors py-1.5 px-2.5 rounded-lg hover:bg-white/5" type="button">
+
+
+</button>
+<!-- Share Button -->
+
+<!-- Options Menu Button -->
+
+</header>
+<!-- Scrollable Conversation Content -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-4 sm:px-6" data-purpose="chat-messages-scroll">
+<div class="max-w-[760px] mx-auto w-full pt-3 pb-8 flex flex-col space-y-6">
+<!-- BEGIN: Turn 1 -->
+<!-- User Message 1 -->
+<article aria-label="Tin nhắn của bạn" class="flex justify-end w-full">
+<div class="bg-[#1e3c66] text-white text-[15px] px-[18px] py-[8px] rounded-full max-w-[85%] leading-relaxed select-text">
+            bạn khoẻ không
+          </div>
+</article>
+<!-- Assistant Message 1 -->
+<article aria-label="Phản hồi của ChatGPT" class="flex flex-col items-start w-full space-y-2 select-text">
+<div class="text-[#e2e2e2] text-[15px] leading-relaxed">
+            Mình khỏe nha 😁 Cảm ơn bạn hỏi! Còn bạn hôm nay thế nào?
+          </div>
+<!-- Message Action Toolbar -->
+<div class="flex items-center gap-3 pt-1 text-[#8f8f8f]">
+<!-- Copy -->
+<button aria-label="Sao chép" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+<!-- Dislike -->
+<button aria-label="Không thích" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+</svg>
+</button>
+<!-- Share -->
+<button aria-label="Chia sẻ" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+<polyline points="16 6 12 2 8 6"></polyline>
+<line x1="12" x2="12" y1="2" y2="15"></line>
+</svg>
+</button>
+<!-- Regenerate -->
+<button aria-label="Tạo lại phản hồi" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<polyline points="23 4 23 10 17 10"></polyline>
+<polyline points="1 20 1 14 7 14"></polyline>
+<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+</svg>
+</button>
+<!-- More options -->
+<button aria-label="Tùy chọn khác" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="5" cy="12" r="1.5"></circle>
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="19" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</article>
+<!-- END: Turn 1 -->
+<!-- BEGIN: Turn 2 -->
+<!-- User Message 2 -->
+<article aria-label="Tin nhắn của bạn" class="flex justify-end w-full pt-4">
+<div class="bg-[#1e3c66] text-white text-[15px] px-[18px] py-[8px] rounded-full max-w-[85%] leading-relaxed select-text">
+            tôi khoẻ
+          </div>
+</article>
+<!-- Assistant Message 2 -->
+<article aria-label="Phản hồi của ChatGPT" class="flex flex-col items-start w-full space-y-2 select-text">
+<div class="text-[#e2e2e2] text-[15px] leading-relaxed">
+            Vậy là tốt rồi 😁 Hôm nay khỏe thì làm gì đó vui vui thôi. Có chuyện gì muốn tám với mình không?
+          </div>
+<!-- Message Action Toolbar -->
+<div class="flex items-center gap-3 pt-1 text-[#8f8f8f]">
+<!-- Copy -->
+<button aria-label="Sao chép" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+<!-- Dislike -->
+<button aria-label="Không thích" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+</svg>
+</button>
+<!-- Share -->
+<button aria-label="Chia sẻ" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+<polyline points="16 6 12 2 8 6"></polyline>
+<line x1="12" x2="12" y1="2" y2="15"></line>
+</svg>
+</button>
+<!-- Regenerate -->
+<button aria-label="Tạo lại phản hồi" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24">
+<polyline points="23 4 23 10 17 10"></polyline>
+<polyline points="1 20 1 14 7 14"></polyline>
+<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+</svg>
+</button>
+<!-- More options -->
+<button aria-label="Tùy chọn khác" class="hover:text-white transition-colors" type="button">
+<svg class="w-[17px] h-[17px]" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="5" cy="12" r="1.5"></circle>
+<circle cx="12" cy="12" r="1.5"></circle>
+<circle cx="19" cy="12" r="1.5"></circle>
+</svg>
+</button>
+</div>
+</article>
+<!-- END: Turn 2 -->
+</div>
+</div>
+<!-- BEGIN: Bottom Input Section -->
+<footer class="w-full pb-3 pt-1 px-4 flex flex-col items-center flex-shrink-0" data-purpose="chat-input-wrapper">
+<div class="w-full max-w-[760px] flex flex-col items-center">
+<!-- Disclaimer text -->
+
+<!-- Pill-shaped Chat Input Bar -->
+<div class="w-full bg-[#212121] rounded-full h-[52px] px-3.5 flex items-center justify-between border border-transparent focus-within:border-[#383838] transition-colors" data-purpose="input-pill">
+<!-- Left side: Plus button & Text input placeholder -->
+<div class="flex items-center flex-1 gap-2.5 h-full px-2">
+<!-- Add attachment button -->
+
+<!-- Input area -->
+<input class="w-full bg-transparent border-0 text-[15px] text-white placeholder-[#858585] focus:outline-none focus:ring-0 p-0 font-normal leading-normal text-left" placeholder="Cứ hỏi nhé" type="text">
+</div>
+<!-- Right side: Reasoning pill, Microphone, Voice Wave button -->
+<div class="flex items-center gap-2 pr-0.5">
+<!-- Reasoning button -->
+
+<!-- Mic button -->
+<button aria-label="Nhập bằng giọng nói" class="w-8 h-8 flex items-center justify-center text-[#b4b4b4] hover:text-white rounded-full transition-colors" type="button">
+
+</button>
+<!-- Voice mode waveform button -->
+<button aria-label="Gửi tin nhắn" class="w-[34px] h-[34px] bg-[#1d63d6] hover:bg-[#256deb] text-white rounded-full flex items-center justify-center transition-all ml-0.5 shadow-sm" type="button"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: Bottom Input Section -->
+</main><aside class="w-[340px] h-full flex flex-col justify-between bg-black text-[#ECECEC] z-20 flex-shrink-0 border-l border-white/5 select-none" data-purpose="right-sidebar-citations">
+  <!-- Header with tabs & close button -->
+  <div class="p-3.5 border-b border-white/5 flex flex-col gap-3 flex-shrink-0">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+
+        <span class="text-[14px] font-semibold text-white tracking-tight">Tài liệu tham chiếu</span>
+      </div>
+      <div class="flex items-center gap-1 text-[#8e8e8e]">
+        <button aria-label="Mở rộng màn hình" class="p-1.5 hover:text-white rounded-lg hover:bg-white/5 transition-colors" title="Mở rộng" type="button">
+
+        </button>
+        <button aria-label="Đóng thanh tài liệu" class="p-1.5 hover:text-white rounded-lg hover:bg-white/10 text-[#8e8e8e] transition-colors bg-transparent" title="Đóng thanh tài liệu" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="3" ry="3" width="18" x="3" y="3"></rect><line x1="15" x2="15" y1="3" y2="21"></line></svg></button>
+      </div>
+    </div>
+    <!-- Tab switcher -->
+    <div class="flex bg-[#212121] p-1 rounded-xl gap-1 text-[13px]">
+      <button class="flex-1 py-1.5 px-2 rounded-lg bg-black/60 text-white font-medium shadow-sm flex items-center justify-center gap-1.5 transition-colors" type="button">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        <span class="">Nguồn trích</span>
+        <span class="text-[11px] px-1.5 py-0.2 rounded-full bg-white/10 text-white/90 ml-0.5">2</span>
+      </button>
+      <button class="flex-1 py-1.5 px-2 rounded-lg text-[#8e8e8e] hover:text-white font-medium flex items-center justify-center gap-1.5 transition-colors" type="button">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        <span class="">Xem chi tiết</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area (Document viewer & active sources) -->
+  <div class="flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar p-3.5 space-y-4">
+    <!-- Selected Document Quick-Viewer Card -->
+
+
+    <!-- Other sources list -->
+    <div class="space-y-2">
+      <div class="px-1 flex items-center justify-between text-xs text-[#8e8e8e]">
+
+
+      </div>
+
+      <!-- Source item 2 -->
+      <div class="p-2.5 rounded-xl bg-[#212121]/60 hover:bg-[#212121] border border-white/5 hover:border-white/15 transition-all cursor-pointer group">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-[#b4b4b4] bg-transparent">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-medium text-white/90 truncate group-hover:text-white transition-colors">Quy chế đào tạo HSU 2024</div>
+            <div class="text-[11px] text-[#8e8e8e] mt-0.5">Liên kết ngoài • hsu.edu.vn</div>
+          </div>
+        </div>
+        <p class="text-xs text-[#8e8e8e] mt-2 line-clamp-2 leading-relaxed bg-black/40 p-2 rounded-lg">Điều 14: Thang điểm đánh giá học phần và tiêu chuẩn xếp loại học lực sinh viên.</p>
+      </div>
+
+      <!-- Source item 3 -->
+      <div class="p-2.5 rounded-xl bg-[#212121]/60 hover:bg-[#212121] border border-white/5 hover:border-white/15 transition-all cursor-pointer group">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-[#b4b4b4] bg-transparent">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-medium text-white/90 truncate group-hover:text-white transition-colors">Ghi chú buổi học_Toan10.docx</div>
+            <div class="text-[11px] text-[#8e8e8e] mt-0.5">Tệp đính kèm • 156 KB</div>
+          </div>
+        </div>
+        <p class="text-xs text-[#8e8e8e] mt-2 line-clamp-2 leading-relaxed bg-black/40 p-2 rounded-lg">Khái niệm đơn thức: biểu thức đại số chỉ gồm một số, hoặc một biến, hoặc một tích giữa các số và các biến.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="p-3 border-t border-white/5 flex items-center justify-between text-xs text-[#8e8e8e] bg-black">
+    <span class="truncate text-[11px]">2&nbsp;tài liệu liên kết chat</span>
+    <button class="text-[#55b9ff] hover:underline flex items-center gap-1 font-medium transition-colors" type="button">
+
+
+    </button>
+  </div>
+</aside>
+<!-- END: Main Chat Area -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
