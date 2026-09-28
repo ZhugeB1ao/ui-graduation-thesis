@@ -1,0 +1,36 @@
+{
+  "user": {
+    "name": "Gia Bảo",
+    "initials": "GB",
+    "studentId": "20210001",
+    "avatarColor": "#df6612"
+  },
+  "conversations": [
+    {
+      "id": "1",
+      "title": "Chào hỏi",
+      "messages": [
+        { "id": "m1", "role": "user", "content": "bạn khoẻ không" },
+        { "id": "m2", "role": "assistant", "content": "Mình khỏe nha 😁 Cảm ơn bạn hỏi! Còn bạn hôm nay thế nào?" },
+        { "id": "m3", "role": "user", "content": "tôi khoẻ" },
+        { "id": "m4", "role": "assistant", "content": "Vậy là tốt rồi 😁 Hôm nay khỏe thì làm gì đó vui vui thôi. Có chuyện gì muốn tám với mình không?" }
+      ]
+    },
+    { "id": "2", "title": "Đánh giá năng lực học sinh", "messages": [] },
+    { "id": "3", "title": "Kiểm tra đang sạc", "messages": [] },
+    { "id": "4", "title": "Định nghĩa đơn thức", "messages": [] },
+    { "id": "5", "title": "Tài liệu Nextjs hy...", "messages": [] },
+    { "id": "6", "title": "Tính điểm trung bình", "messages": [] }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "type": "document",
+      "title": "Quy chế đào tạo HSU 2024.pdf",
+      "description": "ĐH Hoa Sen • 48 trang • 2.4 MB",
+      "fileType": "PDF",
+      "pageCount": 48,
+      "fileSize": "2.4 MB"
+    }
+  ]
+}
