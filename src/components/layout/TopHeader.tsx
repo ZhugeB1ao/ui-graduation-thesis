@@ -1,11 +1,14 @@
 import { SidebarRightIcon } from '@/components/icons'
+import { useAppDispatch, useAppSelector } from '@/store'
+import { toggleRightSidebar } from '@/store/slices/sidebarSlice'
 
-interface TopHeaderProps {
-  showRightToggle: boolean
-  onToggleRight: () => void
-}
+export function TopHeader() {
+  const dispatch = useAppDispatch()
+  const { rightSidebar } = useAppSelector((state) => state.sidebar)
+  const sourcesCount = useAppSelector((state) => state.chat.sources.length)
 
-export function TopHeader({ showRightToggle, onToggleRight }: TopHeaderProps) {
+  const showRightToggle = rightSidebar === 'hidden'
+
   return (
     <header className="h-14 flex items-center justify-end px-5 gap-3.5 flex-shrink-0 z-10">
       <button
@@ -15,11 +18,14 @@ export function TopHeader({ showRightToggle, onToggleRight }: TopHeaderProps) {
       {showRightToggle && (
         <button
           aria-label="Mở thanh bên"
-          className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+          className="relative text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
           type="button"
-          onClick={onToggleRight}
+          onClick={() => dispatch(toggleRightSidebar())}
         >
           <SidebarRightIcon className="w-5 h-5" />
+          {sourcesCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#1d63d6]" />
+          )}
         </button>
       )}
     </header>
