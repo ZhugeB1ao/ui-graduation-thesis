@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { LeftSidebarRail } from './LeftSidebarRail'
 import { LeftSidebarExpanded } from './LeftSidebarExpanded'
-import { RightSidebar } from './RightSidebar'
 import { TopHeader } from './TopHeader'
 import { useAppSelector } from '@/store'
 
@@ -10,7 +9,7 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const { leftSidebar, rightSidebar } = useAppSelector((state) => state.sidebar)
+  const { leftSidebar } = useAppSelector((state) => state.sidebar)
 
   return (
     <div className="h-full flex overflow-hidden select-none text-[15px]">
@@ -26,11 +25,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         <TopHeader />
         {children}
       </div>
-
-      {/* Right Sidebar */}
-      {rightSidebar !== 'hidden' && (
-        <RightSidebar />
-      )}
     </div>
   )
 }

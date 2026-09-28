@@ -3,6 +3,7 @@ export interface Message {
   role: 'user' | 'assistant'
   content: string
   timestamp?: string
+  sources?: SourceCitation[]
 }
 
 export interface Conversation {

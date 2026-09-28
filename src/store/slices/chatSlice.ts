@@ -89,6 +89,7 @@ export const chatSlice = createSlice({
           id: `assistant-${Date.now()}`,
           role: 'assistant',
           content: action.payload.answer,
+          sources: action.payload.sources,
         })
         // Cập nhật danh sách tài liệu tham chiếu (sources)
         state.sources = action.payload.sources
