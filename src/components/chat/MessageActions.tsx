@@ -1,24 +1,23 @@
 import { CopyIcon, ThumbsDownIcon, ShareIcon, RegenerateIcon, MoreDotsIcon } from '@/components/icons'
-import { IconButton } from '@/components/common/IconButton'
 
 export function MessageActions() {
   return (
     <div className="flex items-center gap-3 pt-1 text-[#8f8f8f]">
-      <IconButton label="Sao chép">
+      <button aria-label="Sao chép" className="hover:text-white transition-colors" type="button">
         <CopyIcon />
-      </IconButton>
-      <IconButton label="Không thích">
+      </button>
+      <button aria-label="Không thích" className="hover:text-white transition-colors" type="button">
         <ThumbsDownIcon />
-      </IconButton>
-      <IconButton label="Chia sẻ">
+      </button>
+      <button aria-label="Chia sẻ" className="hover:text-white transition-colors" type="button">
         <ShareIcon />
-      </IconButton>
-      <IconButton label="Tạo lại phản hồi">
+      </button>
+      <button aria-label="Tạo lại phản hồi" className="hover:text-white transition-colors" type="button">
         <RegenerateIcon />
-      </IconButton>
-      <IconButton label="Tùy chọn khác">
+      </button>
+      <button aria-label="Tùy chọn khác" className="hover:text-white transition-colors" type="button">
         <MoreDotsIcon />
-      </IconButton>
+      </button>
     </div>
   )
 }

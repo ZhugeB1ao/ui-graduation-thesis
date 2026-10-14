@@ -51,8 +51,10 @@ Thumbs.db
 # Skills and AI agent directories
 .agents/
 .claude/
+.gemini/
 .gitnexus/
 skills-lock.json
 AGENTS.md
 CLAUDE.md
+GEMINI.md
 

@@ -1,66 +1,53 @@
-import { useState } from 'react'
 import { SidebarRightIcon, BookIcon, EyeIcon, DocumentIcon, ExternalLinkIcon } from '@/components/icons'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { toggleRightSidebar, setRightSidebar, type RightSidebarState } from '@/store/slices/sidebarSlice'
-import { getSources } from '@/services/conversationService'
+import { useChat } from '@/context/ChatContext'
 
 export function RightSidebar() {
-  const dispatch = useAppDispatch()
-  const activeTab = useAppSelector((state) => state.sidebar.rightSidebar)
-  const chatSources = useAppSelector((state) => state.chat.sources)
-  const [selectedSourceIndex, setSelectedSourceIndex] = useState<number>(0)
+  const {
+    rightSidebarTab,
+    setRightSidebarTab,
+    toggleRightSidebar,
+    sources,
+    selectedSourceIndex,
+    setSelectedSourceIndex,
+  } = useChat()
 
-  // Nếu trong chat có sources thật từ API thì dùng, không thì dùng sources mock mặc định
-  const sources = chatSources.length > 0 ? chatSources : getSources()
   const selectedSource = sources[selectedSourceIndex] || sources[0]
-
-  const handleClose = () => {
-    dispatch(toggleRightSidebar())
-  }
-
-  const handleTabChange = (tab: RightSidebarState) => {
-    dispatch(setRightSidebar(tab))
-  }
 
   const handleSelectSource = (index: number) => {
     setSelectedSourceIndex(index)
-    dispatch(setRightSidebar('detail'))
+    setRightSidebarTab('detail')
   }
 
   return (
     <aside className="w-[340px] h-full flex flex-col justify-between bg-black text-[#ECECEC] z-20 flex-shrink-0 border-l border-white/5 select-none">
-      {/* Header */}
-      <div className="p-3.5 border-b border-white/5 flex flex-col gap-3 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-[14px] font-semibold text-white tracking-tight">
-              Tài liệu tham chiếu
-            </span>
-          </div>
-          <div className="flex items-center gap-1 text-[#8e8e8e]">
-            <button
-              aria-label="Đóng thanh tài liệu"
-              className="p-1.5 hover:text-white rounded-lg hover:bg-white/10 text-[#8e8e8e] transition-colors"
-              type="button"
-              onClick={handleClose}
-            >
-              <SidebarRightIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+      {/* Header Row 1: Cao chuẩn h-14 (56px) - Trùng baseline với TopHeader */}
+      <div className="h-14 flex items-center justify-between pl-4 pr-2.5 border-b border-white/5 flex-shrink-0">
+        <span className="text-[14px] font-semibold text-white tracking-tight">
+          Tài liệu tham chiếu
+        </span>
+        <button
+          aria-label="Đóng thanh tài liệu"
+          className="p-1.5 text-white/90 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+          type="button"
+          onClick={toggleRightSidebar}
+        >
+          <SidebarRightIcon className="w-5 h-5" />
+        </button>
+      </div>
 
-        {/* Tab switcher */}
+      {/* Header Row 2: Tab switcher */}
+      <div className="p-3 border-b border-white/5 flex-shrink-0">
         <div className="flex bg-[#212121] p-1 rounded-xl gap-1 text-[13px]">
           <button
             className={`flex-1 py-1.5 px-2 rounded-lg font-medium flex items-center justify-center gap-1.5 transition-colors ${
-              activeTab === 'sources'
+              rightSidebarTab === 'sources'
                 ? 'bg-black/60 text-white shadow-sm'
                 : 'text-[#8e8e8e] hover:text-white'
             }`}
             type="button"
-            onClick={() => handleTabChange('sources')}
+            onClick={() => setRightSidebarTab('sources')}
           >
-            <BookIcon className={`w-3.5 h-3.5 ${activeTab === 'sources' ? 'text-white' : ''}`} />
+            <BookIcon className={`w-3.5 h-3.5 ${rightSidebarTab === 'sources' ? 'text-white' : ''}`} />
             <span>Nguồn trích</span>
             <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-white/10 text-white/90 ml-0.5">
               {sources.length}
@@ -68,14 +55,14 @@ export function RightSidebar() {
           </button>
           <button
             className={`flex-1 py-1.5 px-2 rounded-lg font-medium flex items-center justify-center gap-1.5 transition-colors ${
-              activeTab === 'detail'
+              rightSidebarTab === 'detail'
                 ? 'bg-black/60 text-white shadow-sm'
                 : 'text-[#8e8e8e] hover:text-white'
             }`}
             type="button"
-            onClick={() => handleTabChange('detail')}
+            onClick={() => setRightSidebarTab('detail')}
           >
-            <EyeIcon className={`w-3.5 h-3.5 ${activeTab === 'detail' ? 'text-white' : ''}`} />
+            <EyeIcon className={`w-3.5 h-3.5 ${rightSidebarTab === 'detail' ? 'text-white' : ''}`} />
             <span>Xem chi tiết</span>
           </button>
         </div>
@@ -83,7 +70,7 @@ export function RightSidebar() {
 
       {/* Content */}
       <div className="flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar p-3.5 space-y-4">
-        {activeTab === 'sources' && (
+        {rightSidebarTab === 'sources' && (
           <div className="space-y-2">
             {sources.map((source, idx) => (
               <div
@@ -116,7 +103,7 @@ export function RightSidebar() {
           </div>
         )}
 
-        {activeTab === 'detail' && selectedSource && (
+        {rightSidebarTab === 'detail' && selectedSource && (
           <div className="space-y-4 text-left select-text">
             <div className="rounded-xl bg-[#212121]/70 border border-white/10 overflow-hidden shadow-sm flex flex-col">
               <div className="p-3 bg-[#1e232d]/80 border-b border-white/5 flex items-start justify-between gap-2">
@@ -161,7 +148,7 @@ export function RightSidebar() {
                 <button
                   type="button"
                   className="text-[#55b9ff] hover:underline flex items-center gap-1 font-medium"
-                  onClick={() => handleTabChange('sources')}
+                  onClick={() => setRightSidebarTab('sources')}
                 >
                   <span>Xem nguồn khác</span>
                   <ExternalLinkIcon className="w-3 h-3" />

@@ -1,4 +1,4 @@
-import type { Conversation } from '@/domain/types'
+import type { Conversation } from '@/types'
 import { ChatHistoryItem } from './ChatHistoryItem'
 
 interface ChatHistoryListProps {

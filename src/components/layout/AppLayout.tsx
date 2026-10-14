@@ -1,30 +1,26 @@
 import type { ReactNode } from 'react'
 import { LeftSidebarRail } from './LeftSidebarRail'
-import { LeftSidebarExpanded } from './LeftSidebarExpanded'
+import { LeftSidebar } from './LeftSidebar.tsx'
+import { RightSidebar } from './RightSidebar'
+import { RightSidebarRail } from './RightSidebarRail.tsx'
 import { TopHeader } from './TopHeader'
-import { useAppSelector } from '@/store'
+import { useChat } from '@/context/ChatContext'
 
-interface AppLayoutProps {
-  children: ReactNode
-}
-
-export function AppLayout({ children }: AppLayoutProps) {
-  const { leftSidebar } = useAppSelector((state) => state.sidebar)
+export function AppLayout({ children }: { children: ReactNode }) {
+const { isLeftSidebarExpanded, rightSidebarTab } = useChat()
 
   return (
     <div className="h-full flex overflow-hidden select-none text-[15px]">
       {/* Left Sidebar */}
-      {leftSidebar === 'collapsed' ? (
-        <LeftSidebarRail />
-      ) : (
-        <LeftSidebarExpanded />
-      )}
+      {isLeftSidebarExpanded ? <LeftSidebar /> : <LeftSidebarRail />}
 
-      {/* Main content area */}
+      {/* Main chat area */}
       <div className="flex-1 flex flex-col h-full bg-black relative overflow-hidden">
         <TopHeader />
         {children}
       </div>
-    </div>
+
+      {/* Right Sidebar */}
+      {rightSidebarTab === 'hidden' ? <RightSidebarRail /> : <RightSidebar />}    </div>
   )
 }

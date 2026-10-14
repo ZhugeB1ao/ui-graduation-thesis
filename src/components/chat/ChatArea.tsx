@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import type { Message } from '@/domain/types'
+import type { Message } from '@/types'
 import { UserMessage } from './UserMessage'
 import { AssistantMessage } from './AssistantMessage'
 
@@ -17,6 +17,9 @@ export function ChatArea({ messages, isLoading = false }: ChatAreaProps) {
     }
   }, [messages, isLoading])
 
+  const lastMessage = messages[messages.length - 1]
+  const isWaitingFirstToken = isLoading && (!lastMessage || lastMessage.role === 'user' || !lastMessage.content)
+
   return (
     <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar px-4 sm:px-6">
       <div className="max-w-[760px] mx-auto w-full pt-3 pb-8 flex flex-col space-y-6">
@@ -28,7 +31,7 @@ export function ChatArea({ messages, isLoading = false }: ChatAreaProps) {
           )
         )}
 
-        {isLoading && (
+        {isWaitingFirstToken && (
           <article aria-label="Đang suy nghĩ" className="flex flex-col items-start w-full space-y-2">
             <div className="flex items-center gap-1.5 py-2 px-1">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
