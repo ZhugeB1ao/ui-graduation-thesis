@@ -1,4 +1,4 @@
-import type { User } from '@/domain/types'
+import type { User } from '@/types'
 import { UserAvatar } from './UserAvatar'
 
 interface UserProfileProps {
@@ -7,7 +7,7 @@ interface UserProfileProps {
 
 export function UserProfile({ user }: UserProfileProps) {
   return (
-    <div className="p-3 border-t border-white/5 flex items-center gap-2.5">
+    <div className="h-14 px-2.5 border-t border-white/5 flex items-center gap-3 flex-shrink-0">
       <UserAvatar initials={user.initials} color={user.avatarColor} />
       <div className="min-w-0 flex flex-col">
         <span className="text-[14px] text-white font-medium truncate leading-tight">
