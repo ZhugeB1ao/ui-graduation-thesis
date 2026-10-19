@@ -1,12 +1,21 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
-import type { Conversation, Message, User, SourceCitation } from '@/types'
+import type { Conversation, Message, User, SourceCitation, ActiveView } from '@/types'
 import rawData from '@/data/conversations.json'
-import {askQuestionStream} from "@/services/conversationService.ts";
+import { askQuestionStream } from '@/services/conversationService'
 
-// import { askQuestion } from '@/services/conversationService'
 export type RightSidebarTab = 'hidden' | 'sources' | 'detail'
 
 interface ChatContextType {
+  // Navigation / View
+  activeView: ActiveView
+  setActiveView: (view: ActiveView) => void
+
+  // Auth
+  token: string | null
+  currentUser: string | null
+  loginSuccess: (token: string, username: string) => void
+  logout: () => void
+
   // Left Sidebar
   isLeftSidebarExpanded: boolean
   toggleLeftSidebar: () => void
@@ -38,7 +47,11 @@ interface ChatContextType {
 const ChatContext = createContext<ChatContextType | null>(null)
 
 export function ChatProvider({ children }: { children: ReactNode }) {
-const [isLeftSidebarExpanded, setIsLeftSidebarExpanded] = useState(false)
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('accessToken'))
+  const [currentUser, setCurrentUser] = useState<string | null>(() => localStorage.getItem('username'))
+  const [activeView, setActiveView] = useState<ActiveView>('chat')
+
+  const [isLeftSidebarExpanded, setIsLeftSidebarExpanded] = useState(false)
   const [rightSidebarTab, setRightSidebarTab] = useState<RightSidebarTab>('hidden')
   const [selectedSourceIndex, setSelectedSourceIndex] = useState(0)
 
@@ -50,7 +63,28 @@ const [isLeftSidebarExpanded, setIsLeftSidebarExpanded] = useState(false)
   const activeConversation = conversations.find((c) => c.id === activeId)
   const [currentMessages, setCurrentMessages] = useState<Message[]>(activeConversation?.messages || [])
 
-  const user: User = rawData.user as User
+  const rawUser = rawData.user as User
+  const user: User = {
+    ...rawUser,
+    name: currentUser || rawUser.name,
+    initials: currentUser ? currentUser.slice(0, 2).toUpperCase() : rawUser.initials,
+  }
+
+  const loginSuccess = (newToken: string, newUsername: string) => {
+    localStorage.setItem('accessToken', newToken)
+    localStorage.setItem('username', newUsername)
+    setToken(newToken)
+    setCurrentUser(newUsername)
+    setActiveView('chat')
+  }
+
+  const logout = () => {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('username')
+    setToken(null)
+    setCurrentUser(null)
+    setActiveView('chat')
+  }
 
   const toggleLeftSidebar = () => setIsLeftSidebarExpanded((prev) => !prev)
 
@@ -207,6 +241,12 @@ const [isLeftSidebarExpanded, setIsLeftSidebarExpanded] = useState(false)
   return (
     <ChatContext.Provider
       value={{
+        activeView,
+        setActiveView,
+        token,
+        currentUser,
+        loginSuccess,
+        logout,
         isLeftSidebarExpanded,
         toggleLeftSidebar,
         rightSidebarTab,

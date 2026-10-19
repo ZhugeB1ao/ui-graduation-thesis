@@ -21,9 +21,18 @@ export async function askQuestionStream(
 ): Promise<void> {
   const { onSources, onDelta } = callbacks
   try {
-    const res = await fetch(`${API_BASE_URL}/ask/stream`, {
+    const token = localStorage.getItem('accessToken')
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    }
+    const endpoint = API_BASE_URL.includes('9090')
+      ? `${API_BASE_URL}/api/ai/ask/stream`
+      : `${API_BASE_URL}/ask/stream`
+
+    const res = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ question, ...(top_k !== undefined ? { top_k } : {}) }),
     })
     if (!res.ok) {
