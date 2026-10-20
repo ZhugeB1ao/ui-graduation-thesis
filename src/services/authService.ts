@@ -15,14 +15,17 @@ export async function loginApi(username: string, password: string): Promise<Logi
     })
     if (res.ok) {
       const data = await res.json()
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken)
+      }
       return {
-        accessToken: data.accessToken || data.token || 'demo-jwt-token-123',
+        accessToken: data.accessToken || data.token,
         refreshToken: data.refreshToken,
         username: data.username || username,
       }
     }
     const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || `Đăng nhập không thành công (${res.status})`)
+    throw new Error(err.message || err.detail || `Đăng nhập không thành công (${res.status})`)
   } catch (err: unknown) {
     // Nếu backend chưa chạy (Network error hoặc fetch failed) -> Fallback chế độ Demo
     if (err instanceof TypeError && err.message.includes('fetch')) {
@@ -40,7 +43,7 @@ export async function registerApi(
   email: string,
   password: string,
   departmentId = 1,
-  role = 'USER'
+  role = 'EMPLOYEE'
 ): Promise<LoginResponse> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -50,13 +53,17 @@ export async function registerApi(
     })
     if (res.ok) {
       const data = await res.json()
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken)
+      }
       return {
-        accessToken: data.accessToken || data.token || 'demo-jwt-token-register',
+        accessToken: data.accessToken || data.token,
+        refreshToken: data.refreshToken,
         username: data.username || username,
       }
     }
     const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || `Đăng ký không thành công (${res.status})`)
+    throw new Error(err.message || err.detail || `Đăng ký không thành công (${res.status})`)
   } catch (err: unknown) {
     if (err instanceof TypeError && err.message.includes('fetch')) {
       return {

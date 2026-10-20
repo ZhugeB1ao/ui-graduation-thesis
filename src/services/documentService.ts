@@ -91,6 +91,31 @@ function saveStoredDocs(docs: DocumentItem[]) {
   sessionStorage.setItem('mock_documents', JSON.stringify(docs))
 }
 
+function formatFileSize(bytes?: number | string): string {
+  if (typeof bytes === 'string') return bytes
+  if (typeof bytes !== 'number' || Number.isNaN(bytes)) return '—'
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function mapBackendDoc(raw: Record<string, unknown>): DocumentItem {
+  const status = (raw.ocrStatus as DocumentItem['ocrStatus']) || 'PENDING'
+  const uploadDate = raw.uploadDate as string | undefined
+  return {
+    id: Number(raw.id),
+    title: (raw.title as string) || (raw.originalFileName as string) || 'Tài liệu không tên',
+    fileName: (raw.originalFileName as string) || (raw.fileName as string) || 'document.pdf',
+    fileSize: formatFileSize(raw.fileSize as number | string | undefined),
+    ocrStatus: status,
+    createdAt: uploadDate
+      ? new Date(uploadDate).toLocaleString('vi-VN')
+      : (raw.createdAt as string) || '',
+    isEmbedded: typeof raw.isEmbedded === 'boolean' ? raw.isEmbedded : status === 'COMPLETED',
+    extractedText: raw.extractedText as string | undefined,
+  }
+}
+
 export async function fetchDocuments(): Promise<DocumentItem[]> {
   const token = localStorage.getItem('accessToken')
   try {
@@ -101,7 +126,9 @@ export async function fetchDocuments(): Promise<DocumentItem[]> {
     })
     if (res.ok) {
       const data = await res.json()
-      if (Array.isArray(data) && data.length > 0) return data
+      if (Array.isArray(data)) {
+        return data.map((item) => mapBackendDoc(item as Record<string, unknown>))
+      }
     }
   } catch {
     // API chưa sẵn sàng hoặc offline -> Fallback mock data
@@ -111,10 +138,11 @@ export async function fetchDocuments(): Promise<DocumentItem[]> {
 
 export async function uploadDocument(file: File, title: string): Promise<DocumentItem> {
   const token = localStorage.getItem('accessToken')
+  const finalTitle = title.trim() || file.name
   try {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('title', title)
+    formData.append('title', finalTitle)
 
     const res = await fetch(`${API_BASE_URL}/api/documents/upload`, {
       method: 'POST',
@@ -125,7 +153,15 @@ export async function uploadDocument(file: File, title: string): Promise<Documen
     })
     if (res.ok) {
       const data = await res.json()
-      return data
+      return {
+        id: Number(data.id),
+        title: finalTitle,
+        fileName: file.name,
+        fileSize: formatFileSize(file.size),
+        ocrStatus: (data.ocrStatus as DocumentItem['ocrStatus']) || 'PENDING',
+        createdAt: new Date().toLocaleString('vi-VN'),
+        isEmbedded: false,
+      }
     }
   } catch {
     // API offline -> Fallback tạo mock document mới
@@ -135,7 +171,7 @@ export async function uploadDocument(file: File, title: string): Promise<Documen
   const newId = docs.length > 0 ? Math.max(...docs.map((d) => d.id)) + 1 : 1
   const newDoc: DocumentItem = {
     id: newId,
-    title: title.trim() || file.name,
+    title: finalTitle,
     fileName: file.name,
     fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
     ocrStatus: 'PROCESSING',
@@ -171,7 +207,15 @@ export async function fetchDocumentText(id: number): Promise<string> {
     })
     if (res.ok) {
       const data = await res.json()
-      return typeof data === 'string' ? data : data.text || data.extractedText
+      if (typeof data === 'string') return data
+      if (data.text) return data.text
+      if (data.ocrStatus === 'PENDING' || data.ocrStatus === 'PROCESSING') {
+        return '⏳ Tài liệu đang trong hàng đợi xử lý Tesseract OCR. Vui lòng bấm "Làm mới danh sách" sau vài giây...'
+      }
+      if (data.ocrStatus === 'FAILED') {
+        return `❌ Quét OCR thất bại: ${data.ocrError || 'Không thể đọc tệp tin'}`
+      }
+      return 'Tài liệu không có văn bản trích xuất.'
     }
   } catch {
     // API offline -> Fallback

@@ -1,7 +1,7 @@
 import type { SourceCitation } from '@/types'
 import rawData from '@/data/conversations.json'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'
 
 interface RawApiSource {
   source: string

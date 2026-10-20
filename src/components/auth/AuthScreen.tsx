@@ -10,7 +10,7 @@ export function AuthScreen() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<'USER' | 'ADMIN'>('USER')
+  const [role, setRole] = useState<'EMPLOYEE' | 'MANAGER' | 'ADMIN'>('EMPLOYEE')
 
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -46,8 +46,17 @@ export function AuthScreen() {
     }
   }
 
-  const handleQuickDemoLogin = () => {
-    loginSuccess('demo-jwt-token-hsu-2026', 'Gia Bảo (22101994)')
+  const handleQuickDemoLogin = async () => {
+    setLoading(true)
+    setErrorMessage(null)
+    try {
+      const res = await loginApi('demo_hsu', 'Password@123')
+      loginSuccess(res.accessToken, res.username)
+    } catch {
+      loginSuccess('demo-jwt-token-hsu-2026', 'Gia Bảo (22101994)')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -166,11 +175,12 @@ export function AuthScreen() {
               </label>
               <select
                 value={role}
-                onChange={(e) => setRole(e.target.value as 'USER' | 'ADMIN')}
+                onChange={(e) => setRole(e.target.value as 'EMPLOYEE' | 'MANAGER' | 'ADMIN')}
                 className="w-full bg-[#212121] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#55b9ff] transition-all"
               >
-                <option value="USER">Sinh viên / Người dùng (USER)</option>
-                <option value="ADMIN">Cán bộ Quản trị viên (ADMIN)</option>
+                <option value="EMPLOYEE">Chuyên viên / Sinh viên (EMPLOYEE)</option>
+                <option value="MANAGER">Quản lý Phòng ban (MANAGER)</option>
+                <option value="ADMIN">Quản trị viên (ADMIN)</option>
               </select>
             </div>
           )}
